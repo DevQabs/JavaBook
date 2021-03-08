@@ -5,6 +5,35 @@
 코드 전달 기법은 자바 8 이전에는 코드를 지저분하게 구현해야 했다. 익명 클래스로도 어느 정도 코드를 깔끔하게 만들 수 있으나,<br/>
 자바 8에서는 **Functional Interface**를 이용하여 여러 클래스를 구현해야 하는 수고를 없앨 수 있게 되었다.
 
+### 함수형 인터페이스
+하나의 추상 메서드를 지정하여 제공하는 인터페이스이다.
+디폴트 메서드가 있어도 추상 메서드가 오직 하나면 함수형 인터페이스이다.
+
+```@FunctionalInterface``` 어노테이션을 통해 함수형 인터페이스임을 가리킬 수 있다.
+만약 해당 어노테이션으로 인터페이스를 선언했지만, 함수형이 아닐경우 컴파일 타임에서 에러가 발생한다.
+~~~java
+@FunctionalInterface
+public interface BufferedReaderProcessor {
+	String process(BufferedReader b) throws IOException;
+}
+
+// ...
+public String processFile(BufferedReaderProcessor p) throws IOException {
+	try (BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+		return p.process(br);
+	}
+}
+
+// main class
+String oneLine =
+	processFile((BufferedReader br) -> br.readLine());
+
+String twoLines = 
+	processFile((BufferedReader br) -> br.readLine() + br.readLine());
+~~~
+
+아래는 자바에서 제공하는 함수형 인터페이스이다.
+
 1. Runnable
     기존부터 존재하던 인터페이스로 스레드를 생성할 때 주로 사용되었으며, 가장 기본적인 함수형 인터페이스다.<br/>
     void타입의 인자없는 메서드를 갖고 있다
